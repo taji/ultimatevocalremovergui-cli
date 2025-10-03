@@ -4,6 +4,12 @@
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
 
+> IMPORTANT NOTE: This repo is a fork of the original UVR repo here: https://github.com/Anjok07/ultimatevocalremovergui
+> The only difference is you can pass in two parameters to UVR via the command line:
+   - input file path
+   - output folder
+> These will instruct UVR to update it's Input and Output file/folder UI widgets.
+
 ## About
 
 This application uses state-of-the-art source separation models to remove vocals from audio files. UVR's core developers trained all of the models provided in this package (except for the Demucs v3 and v4 4-stem models).
