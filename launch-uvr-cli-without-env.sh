@@ -1,20 +1,14 @@
 #!/usr/bin/env bash
 
-# A debugging script for local launching of the UVR-reaper file. 
-# As you are testing, sometimes you want to launch UVR-reaper.py with the venv already active.  This skips the pyenv steps and just launches UVR-reaper.
+# A debugging script for local launching of the UVR-UVI file. 
+# As you are testing, sometimes you want to launch UVR-UVI.py with the venv already active.  This skips the pyenv steps and just launches UVR-UVI.
 
 cd "$(dirname "$0")"
 
 # Kill any previous instance of the app
-pkill -f UVR-reaper.py
+pkill -f UVR-UVI.py
 
-# Check if an input file is provided
-if [ -z "$1" ]; then
-  echo "Usage: $0 <input_file>"
-  exit 1
-fi
-
-INPUT_FILE="$1"
+INPUT_FILE="${1:-}"  # Allow for empty parameter for testing
 OUTPUT_DIR="$(dirname "$INPUT_FILE")"
 
-python UVR-reaper.py "$INPUT_FILE" "$OUTPUT_DIR"
+python UVR-CLI.py "$INPUT_FILE" "$OUTPUT_DIR"
