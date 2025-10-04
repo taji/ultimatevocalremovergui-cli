@@ -19,6 +19,16 @@ from omegaconf import OmegaConf
 from diffq import DiffQuantizer, UniformQuantizer, restore_quantized_state
 import torch
 
+# --- allowlist htdemucs for PyTorch safe unpickling (Torch>=2.6) ---
+try:
+    from demucs.htdemucs import HTDemucs, HTDemucsMultiFrame
+    from fractions import Fraction
+    import torch.serialization as _ts
+    _ts.add_safe_globals([HTDemucs, HTDemucsMultiFrame, Fraction])
+except Exception:
+    # Best-effort: if this import fails, we fall back to existing behavior
+    pass
+# -------------------------------------------------------------------
 
 def get_quantizer(model, args, optimizer=None):
     """Return the quantizer given the XP quantization args."""
@@ -34,6 +44,8 @@ def get_quantizer(model, args, optimizer=None):
     return quantizer
 
 
+
+
 def load_model(path_or_package, strict=False):
     """Load a model from the given serialized model, either given as a dict (already loaded)
     or a path to a file on disk."""
@@ -43,7 +55,8 @@ def load_model(path_or_package, strict=False):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             path = path_or_package
-            package = torch.load(path, 'cpu')
+            # Explicitly turn off weights_only to match Demucs checkpoints
+            package = torch.load(path, map_location="cpu", weights_only=False)
     else:
         raise ValueError(f"Invalid type for {path_or_package}.")
 
@@ -62,10 +75,8 @@ def load_model(path_or_package, strict=False):
         model = klass(*args, **kwargs)
 
     state = package["state"]
-
     set_state(model, state)
     return model
-
 
 def get_state(model, quantizer, half=False):
     """Get the state from a model, potentially with quantization applied.
